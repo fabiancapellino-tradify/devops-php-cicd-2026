@@ -1,0 +1,33 @@
+name: fabian-capellino
+
+services:
+  web:
+    image: ${DOCKERHUB_USER}/web-devops-2026:latest
+    container_name: fabian-capellino-web
+    ports:
+      - "8083:80"
+    environment:
+      - DB_HOST=db
+      - DB_NAME=devops_db
+      - DB_USER=user_devops
+      - DB_PASS=pass_devops
+      - APP_VERSION=${APP_VERSION:-v1.0}
+      - COMMIT_MSG=${COMMIT_MSG:-Initial deployment}
+    depends_on:
+      - db
+    restart: always
+
+  db:
+    image: mysql:8.0
+    container_name: fabian-capellino-db
+    environment:
+      - MYSQL_DATABASE=devops_db
+      - MYSQL_USER=user_devops
+      - MYSQL_PASSWORD=pass_devops
+      - MYSQL_ROOT_PASSWORD=root_devops
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+
+volumes:
+  db_data:
